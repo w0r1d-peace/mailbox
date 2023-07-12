@@ -19,4 +19,11 @@ export function addTask(data) {
 }
 
 
+export function pullEmail() {
+  return request({
+    url: '/mailbox/task/pull',
+    method: 'post'
+  })
+}
+
 

@@ -4,6 +4,7 @@
     <el-card class="email-list-card" :style="{ width: '23%' }">
       <div slot="header" class="email-list-header">
         邮箱列表
+        <el-button type="primary" class="add-button" @click="pullEmail">拉取</el-button>
         <el-button type="primary" class="add-button" @click="showAddDialog">+</el-button>
       </div>
 
@@ -77,7 +78,7 @@
 </template>
 
 <script>
-import {addTask, listTask} from "@/api/mailbox/receive";
+import {addTask, listTask, pullEmail} from "@/api/mailbox/receive";
 import { getToken } from "@/utils/auth";
 
 export default {
@@ -143,6 +144,11 @@ export default {
           // Validation failed, display error messages
           this.$message.error("请填写正确的表单信息");
         }
+      });
+    },
+    pullEmail() {
+      pullEmail().then((response) => {
+        this.$message.success("拉取成功");
       });
     }
   },

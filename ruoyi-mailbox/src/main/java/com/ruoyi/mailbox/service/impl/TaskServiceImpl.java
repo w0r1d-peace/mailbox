@@ -187,12 +187,21 @@ public class TaskServiceImpl implements ITaskService
     }
 
     @Override
-    public int pull(Long taskId) {
-        Task task = taskMapper.selectTaskById(taskId);
-        if (task == null) {
-            throw new ServiceException("任务不存在");
-        }
+    public boolean pull(Long taskId) {
+        List<Task> tasks = taskMapper.selectTaskList(new Task());
+        tasks.forEach(task -> {
+            pullEmail(task);
+        });
 
+        return true;
+    }
+
+    /**
+     * 拉去邮件
+     * @param task
+     */
+    private void pullEmail(Task task) {
+        Long id = task.getId();
         MailConnCfg mailConnCfg = new MailConnCfg();
         mailConnCfg.setEmail(task.getEmail());
         mailConnCfg.setPassword(task.getPassword());
@@ -209,7 +218,7 @@ public class TaskServiceImpl implements ITaskService
         try {
             List<MailItem> mailItems = mailService.listAll(mailConn, "", null);
             if (mailItems == null || mailItems.size() == 0) {
-                return 0;
+                return;
             }
 
             for (MailItem mailItem : mailItems) {
@@ -217,25 +226,25 @@ public class TaskServiceImpl implements ITaskService
                 TaskEmailHeader emailHeader = new TaskEmailHeader();
                 // 邮件头
                 BeanUtils.copyProperties(universalMail, emailHeader);
-                emailHeader.setTaskId(taskId);
+                emailHeader.setTaskId(id);
                 emailHeader.setCreateTime(DateUtils.getNowDate());
                 taskEmailHeaderMapper.insertTaskEmailHeader(emailHeader);
 
                 // 邮件内容
                 TaskEmailContent emailContent = new TaskEmailContent();
-                emailContent.setTaskId(taskId);
+                emailContent.setTaskId(id);
                 emailContent.setContent(universalMail.getContent());
                 emailContent.setCreateTime(DateUtils.getNowDate());
                 taskEmailContentMapper.insertTaskEmailContent(emailContent);
 
-                 //邮件附件
+                //邮件附件
                 List<TaskEmailAttachment> emailAttachments = new ArrayList<>();
                 List<UniversalAttachment> attachments = universalMail.getAttachments();
                 if (attachments != null) {
                     for (UniversalAttachment attachment : attachments) {
                         TaskEmailAttachment emailAttachment = new TaskEmailAttachment();
                         BeanUtils.copyProperties(attachment, emailAttachment);
-                        emailAttachment.setTaskId(taskId);
+                        emailAttachment.setTaskId(id);
                         emailAttachment.setCreateTime(DateUtils.getNowDate());
                         emailAttachments.add(emailAttachment);
                     }
@@ -246,6 +255,5 @@ public class TaskServiceImpl implements ITaskService
         } catch (MailPlusException e) {
             log.error("邮件拉取失败，原始错误信息为【{}】", e);
         }
-        return 0;
     }
 }

@@ -64,5 +64,5 @@ public interface ITaskService
      * @param taskId
      * @return
      */
-    int pull(Long taskId);
+    boolean pull(Long taskId);
 }
