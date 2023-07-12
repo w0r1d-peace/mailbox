@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mailbox.mapper.TaskMapper">
+    
+    <resultMap type="Task" id="TaskResult">
+        <result property="id"    column="id"    />
+        <result property="email"    column="email"    />
+        <result property="password"    column="password"    />
+        <result property="connStatus"    column="conn_status"    />
+        <result property="connExceptionReason"    column="conn_exception_reason"    />
+        <result property="port"    column="port"    />
+        <result property="host"    column="host"    />
+        <result property="hasSsl"    column="has_ssl"    />
+        <result property="protocolType"    column="protocol_type"    />
+        <result property="description"    column="description"    />
+        <result property="createId"    column="create_id"    />
+        <result property="createName"    column="create_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateId"    column="update_id"    />
+        <result property="updateName"    column="update_name"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="removed"    column="removed"    />
+    </resultMap>
+
+    <sql id="selectTaskVo">
+        select id, email, password, conn_status, conn_exception_reason, port, host, has_ssl, protocol_type, description, create_id, create_name, create_time, update_id, update_name, update_time, removed from mailbox_task
+    </sql>
+
+    <select id="selectTaskList" parameterType="Task" resultMap="TaskResult">
+        <include refid="selectTaskVo"/>
+        <where>  
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="connStatus != null "> and conn_status = #{connStatus}</if>
+            <if test="connExceptionReason != null  and connExceptionReason != ''"> and conn_exception_reason = #{connExceptionReason}</if>
+            <if test="port != null "> and port = #{port}</if>
+            <if test="host != null  and host != ''"> and host = #{host}</if>
+            <if test="hasSsl != null "> and has_ssl = #{hasSsl}</if>
+            <if test="protocolType != null "> and protocol_type = #{protocolType}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+            <if test="createName != null  and createName != ''"> and create_name like concat('%', #{createName}, '%')</if>
+            <if test="updateId != null "> and update_id = #{updateId}</if>
+            <if test="updateName != null  and updateName != ''"> and update_name like concat('%', #{updateName}, '%')</if>
+            <if test="removed != null "> and removed = #{removed}</if>
+        </where>
+    </select>
+    
+    <select id="selectTaskById" parameterType="Long" resultMap="TaskResult">
+        <include refid="selectTaskVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTask" parameterType="Task" useGeneratedKeys="true" keyProperty="id">
+        insert into mailbox_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="email != null and email != ''">email,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="connStatus != null">conn_status,</if>
+            <if test="connExceptionReason != null">conn_exception_reason,</if>
+            <if test="port != null">port,</if>
+            <if test="host != null">host,</if>
+            <if test="hasSsl != null">has_ssl,</if>
+            <if test="protocolType != null">protocol_type,</if>
+            <if test="description != null">description,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="createName != null">create_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateId != null">update_id,</if>
+            <if test="updateName != null">update_name,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="removed != null">removed,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="email != null and email != ''">#{email},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="connStatus != null">#{connStatus},</if>
+            <if test="connExceptionReason != null">#{connExceptionReason},</if>
+            <if test="port != null">#{port},</if>
+            <if test="host != null">#{host},</if>
+            <if test="hasSsl != null">#{hasSsl},</if>
+            <if test="protocolType != null">#{protocolType},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="createName != null">#{createName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateId != null">#{updateId},</if>
+            <if test="updateName != null">#{updateName},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="removed != null">#{removed},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTask" parameterType="Task">
+        update mailbox_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="connStatus != null">conn_status = #{connStatus},</if>
+            <if test="connExceptionReason != null">conn_exception_reason = #{connExceptionReason},</if>
+            <if test="port != null">port = #{port},</if>
+            <if test="host != null">host = #{host},</if>
+            <if test="hasSsl != null">has_ssl = #{hasSsl},</if>
+            <if test="protocolType != null">protocol_type = #{protocolType},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="createName != null">create_name = #{createName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateId != null">update_id = #{updateId},</if>
+            <if test="updateName != null">update_name = #{updateName},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="removed != null">removed = #{removed},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTaskById" parameterType="Long">
+        delete from mailbox_task where id = #{id}
+    </delete>
+
+    <delete id="deleteTaskByIds" parameterType="String">
+        delete from mailbox_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countByEmail" parameterType="String" resultType="int">
+        select count(1) from mailbox_task where email = #{email}
+    </select>
+</mapper>

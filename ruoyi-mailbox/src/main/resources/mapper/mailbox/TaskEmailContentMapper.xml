@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mailbox.mapper.TaskEmailContentMapper">
+
+    <resultMap type="TaskEmailContent" id="TaskEmailContentResult">
+        <result property="id"    column="id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="content"    column="content"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="modified"    column="modified"    />
+        <result property="removed"    column="removed"    />
+        <result property="userId"    column="user_id"    />
+        <result property="creator"    column="creator"    />
+    </resultMap>
+
+    <sql id="selectTaskEmailContentVo">
+        select id, task_id, content, create_time, modified, removed, user_id, creator from mailbox_task_email_content
+    </sql>
+
+    <select id="selectTaskEmailContentList" parameterType="TaskEmailContent" resultMap="TaskEmailContentResult">
+        <include refid="selectTaskEmailContentVo"/>
+        <where>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="modified != null "> and modified = #{modified}</if>
+            <if test="removed != null "> and removed = #{removed}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="creator != null  and creator != ''"> and creator = #{creator}</if>
+        </where>
+    </select>
+
+    <select id="selectTaskEmailContentById" parameterType="Long" resultMap="TaskEmailContentResult">
+        <include refid="selectTaskEmailContentVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTaskEmailContent" parameterType="TaskEmailContent" useGeneratedKeys="true" keyProperty="id">
+        insert into mailbox_task_email_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">task_id,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="modified != null">modified,</if>
+            <if test="removed != null">removed,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="creator != null">creator,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">#{taskId},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="modified != null">#{modified},</if>
+            <if test="removed != null">#{removed},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="creator != null">#{creator},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTaskEmailContent" parameterType="TaskEmailContent">
+        update mailbox_task_email_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="modified != null">modified = #{modified},</if>
+            <if test="removed != null">removed = #{removed},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="creator != null">creator = #{creator},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTaskEmailContentById" parameterType="Long">
+        delete from mailbox_task_email_content where id = #{id}
+    </delete>
+
+    <delete id="deleteTaskEmailContentByIds" parameterType="String">
+        delete from mailbox_task_email_content where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

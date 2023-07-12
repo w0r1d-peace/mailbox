@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mailbox.mapper.TaskEmailHeaderMapper">
+
+    <resultMap type="TaskEmailHeader" id="TaskEmailHeaderResult">
+        <result property="id"    column="id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="uid"    column="uid"    />
+        <result property="fromer"    column="fromer"    />
+        <result property="receiver"    column="receiver"    />
+        <result property="bcc"    column="bcc"    />
+        <result property="cc"    column="cc"    />
+        <result property="folder"    column="folder"    />
+        <result property="hasRead"    column="has_read"    />
+        <result property="hasAttachment"    column="has_attachment"    />
+        <result property="sendDate"    column="send_date"    />
+        <result property="email"    column="email"    />
+        <result property="title"    column="title"    />
+        <result property="emlPath"    column="eml_path"    />
+        <result property="hasTop"    column="has_top"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="modified"    column="modified"    />
+        <result property="userId"    column="user_id"    />
+        <result property="creator"    column="creator"    />
+        <result property="removed"    column="removed"    />
+    </resultMap>
+
+    <sql id="selectTaskEmailHeaderVo">
+        select id, task_id, uid, fromer, receiver, bcc, cc, folder, has_read, has_attachment, send_date, email, title, eml_path, has_top, create_time, modified, user_id, creator, removed from mailbox_task_email_header
+    </sql>
+
+    <select id="selectTaskEmailHeaderList" parameterType="TaskEmailHeader" resultMap="TaskEmailHeaderResult">
+        <include refid="selectTaskEmailHeaderVo"/>
+        <where>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="uid != null  and uid != ''"> and uid = #{uid}</if>
+            <if test="fromer != null  and fromer != ''"> and fromer = #{fromer}</if>
+            <if test="receiver != null  and receiver != ''"> and receiver = #{receiver}</if>
+            <if test="bcc != null  and bcc != ''"> and bcc = #{bcc}</if>
+            <if test="cc != null  and cc != ''"> and cc = #{cc}</if>
+            <if test="folder != null  and folder != ''"> and folder = #{folder}</if>
+            <if test="hasRead != null "> and has_read = #{hasRead}</if>
+            <if test="hasAttachment != null "> and has_attachment = #{hasAttachment}</if>
+            <if test="sendDate != null "> and send_date = #{sendDate}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="emlPath != null  and emlPath != ''"> and eml_path = #{emlPath}</if>
+            <if test="hasTop != null "> and has_top = #{hasTop}</if>
+            <if test="modified != null "> and modified = #{modified}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="creator != null  and creator != ''"> and creator = #{creator}</if>
+            <if test="removed != null "> and removed = #{removed}</if>
+        </where>
+    </select>
+
+    <select id="selectTaskEmailHeaderById" parameterType="Long" resultMap="TaskEmailHeaderResult">
+        <include refid="selectTaskEmailHeaderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTaskEmailHeader" parameterType="TaskEmailHeader" useGeneratedKeys="true" keyProperty="id">
+        insert into mailbox_task_email_header
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">task_id,</if>
+            <if test="uid != null">uid,</if>
+            <if test="fromer != null">fromer,</if>
+            <if test="receiver != null">receiver,</if>
+            <if test="bcc != null">bcc,</if>
+            <if test="cc != null">cc,</if>
+            <if test="folder != null">folder,</if>
+            <if test="hasRead != null">has_read,</if>
+            <if test="hasAttachment != null">has_attachment,</if>
+            <if test="sendDate != null">send_date,</if>
+            <if test="email != null">email,</if>
+            <if test="title != null">title,</if>
+            <if test="emlPath != null">eml_path,</if>
+            <if test="hasTop != null">has_top,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="modified != null">modified,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="creator != null">creator,</if>
+            <if test="removed != null">removed,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">#{taskId},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="fromer != null">#{fromer},</if>
+            <if test="receiver != null">#{receiver},</if>
+            <if test="bcc != null">#{bcc},</if>
+            <if test="cc != null">#{cc},</if>
+            <if test="folder != null">#{folder},</if>
+            <if test="hasRead != null">#{hasRead},</if>
+            <if test="hasAttachment != null">#{hasAttachment},</if>
+            <if test="sendDate != null">#{sendDate},</if>
+            <if test="email != null">#{email},</if>
+            <if test="title != null">#{title},</if>
+            <if test="emlPath != null">#{emlPath},</if>
+            <if test="hasTop != null">#{hasTop},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="modified != null">#{modified},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="removed != null">#{removed},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTaskEmailHeader" parameterType="TaskEmailHeader">
+        update mailbox_task_email_header
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="fromer != null">fromer = #{fromer},</if>
+            <if test="receiver != null">receiver = #{receiver},</if>
+            <if test="bcc != null">bcc = #{bcc},</if>
+            <if test="cc != null">cc = #{cc},</if>
+            <if test="folder != null">folder = #{folder},</if>
+            <if test="hasRead != null">has_read = #{hasRead},</if>
+            <if test="hasAttachment != null">has_attachment = #{hasAttachment},</if>
+            <if test="sendDate != null">send_date = #{sendDate},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="emlPath != null">eml_path = #{emlPath},</if>
+            <if test="hasTop != null">has_top = #{hasTop},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="modified != null">modified = #{modified},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="removed != null">removed = #{removed},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTaskEmailHeaderById" parameterType="Long">
+        delete from mailbox_task_email_header where id = #{id}
+    </delete>
+
+    <delete id="deleteTaskEmailHeaderByIds" parameterType="String">
+        delete from mailbox_task_email_header where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
