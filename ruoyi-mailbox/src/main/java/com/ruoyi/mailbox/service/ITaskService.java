@@ -2,6 +2,7 @@ package com.ruoyi.mailbox.service;
 
 import java.util.List;
 import com.ruoyi.mailbox.domain.Task;
+import com.ruoyi.mailbox.domain.dto.MailSendDTO;
 
 /**
  * 邮箱任务Service接口
@@ -33,7 +34,7 @@ public interface ITaskService
      * @param task 邮箱任务
      * @return 结果
      */
-    public int insertTask(Task task);
+    public boolean insertTask(Task task);
 
     /**
      * 修改邮箱任务
@@ -65,4 +66,11 @@ public interface ITaskService
      * @return
      */
     boolean pull(Long taskId);
+
+    /**
+     * 邮箱发送
+     * @param mailSendDTO
+     * @return
+     */
+    boolean send(MailSendDTO mailSendDTO);
 }

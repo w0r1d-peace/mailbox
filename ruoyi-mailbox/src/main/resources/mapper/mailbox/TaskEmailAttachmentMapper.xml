@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.mailbox.mapper.TaskEmailAttachmentMapper">
-    
+
     <resultMap type="TaskEmailAttachment" id="TaskEmailAttachmentResult">
         <result property="id"    column="id"    />
-        <result property="taskId"    column="task_id"    />
+        <result property="headerId"    column="header_id"    />
         <result property="path"    column="path"    />
         <result property="cid"    column="cid"    />
         <result property="name"    column="name"    />
@@ -14,49 +14,49 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTaskEmailAttachmentVo">
-        select id, task_id, path, cid, name, content_type from mailbox_task_email_attachment
+        select id, header_id, path, cid, name, content_type from mailbox_task_email_attachment
     </sql>
 
     <select id="selectTaskEmailAttachmentList" parameterType="TaskEmailAttachment" resultMap="TaskEmailAttachmentResult">
         <include refid="selectTaskEmailAttachmentVo"/>
-        <where>  
-            <if test="taskId != null "> and task_id = #{taskId}</if>
+        <where>
+            <if test="headerId != null "> and header_id = #{headerId}</if>
             <if test="path != null  and path != ''"> and path = #{path}</if>
             <if test="cid != null  and cid != ''"> and cid = #{cid}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="contentType != null  and contentType != ''"> and content_type = #{contentType}</if>
         </where>
     </select>
-    
+
     <select id="selectTaskEmailAttachmentById" parameterType="Long" resultMap="TaskEmailAttachmentResult">
         <include refid="selectTaskEmailAttachmentVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertTaskEmailAttachment" parameterType="TaskEmailAttachment">
         insert into mailbox_task_email_attachment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="taskId != null">task_id,</if>
+            <if test="headerId != null">header_id,</if>
             <if test="path != null">path,</if>
             <if test="cid != null">cid,</if>
             <if test="name != null">name,</if>
             <if test="contentType != null">content_type,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
-            <if test="taskId != null">#{taskId},</if>
+            <if test="headerId != null">#{headerId},</if>
             <if test="path != null">#{path},</if>
             <if test="cid != null">#{cid},</if>
             <if test="name != null">#{name},</if>
             <if test="contentType != null">#{contentType},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateTaskEmailAttachment" parameterType="TaskEmailAttachment">
         update mailbox_task_email_attachment
         <trim prefix="SET" suffixOverrides=",">
-            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="headerId != null">header_id = #{headerId},</if>
             <if test="path != null">path = #{path},</if>
             <if test="cid != null">cid = #{cid},</if>
             <if test="name != null">name = #{name},</if>
@@ -70,19 +70,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteTaskEmailAttachmentByIds" parameterType="String">
-        delete from mailbox_task_email_attachment where id in 
+        delete from mailbox_task_email_attachment where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-
-    <!-- 批量插入邮件附件 -->
-    <insert id="insertTaskEmailAttachmentBatch" parameterType="java.util.List">
-        insert into mailbox_task_email_attachment
-        (task_id, path, cid, name, content_type)
-        values
-        <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.taskId}, #{item.path}, #{item.cid}, #{item.name}, #{item.contentType})
-        </foreach>
-    </insert>
 </mapper>

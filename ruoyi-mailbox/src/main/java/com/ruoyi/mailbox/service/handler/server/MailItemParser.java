@@ -161,7 +161,7 @@ public class MailItemParser {
                 folder.open(Folder.READ_WRITE);
             }
             MimeMessageParser parser = (new MimeMessageParser(mimeMessage)).parse();
-            String uid = "";
+            /*String uid = "";
             if (mimeMessage instanceof IMAPMessage) {
                 uid = folder.getName() + ((IMAPFolder)folder).getUID(mimeMessage);
             } else if (mimeMessage instanceof POP3Message) {
@@ -177,7 +177,12 @@ public class MailItemParser {
                 String body = parser.hasHtmlContent() ? parser.getHtmlContent() : parser.getPlainContent();
                 UniversalMail universalMail = UniversalMail.builder().content(StringUtils.isEmpty(body) ? "" : EmojiParser.parseToAliases(body)).uid(uid).receiver(getMimeMessageAddressJson(parser.getTo())).title(StringUtils.isEmpty(subject) ? "<无主题>" : EmojiParser.parseToAliases(subject)).sendDate(mimeMessage.getSentDate()).hasRead(mimeMessage.getFlags().equals(Flag.SEEN)).hasAttachment(parser.hasAttachments()).fromer(parser.getFrom()).folder(folder != null ? folder.getName() : "手动导入").cc(getMimeMessageAddressJson(parser.getCc())).bcc(getMimeMessageAddressJson(parser.getBcc())).build();
                 return universalMail;
-            }
+            }*/
+
+            String subject = parser.getSubject();
+            String body = parser.hasHtmlContent() ? parser.getHtmlContent() : parser.getPlainContent();
+            UniversalMail universalMail = UniversalMail.builder().content(StringUtils.isEmpty(body) ? "" : EmojiParser.parseToAliases(body)).receiver(getMimeMessageAddressJson(parser.getTo())).title(StringUtils.isEmpty(subject) ? "<无主题>" : EmojiParser.parseToAliases(subject)).sendDate(mimeMessage.getSentDate()).hasRead(mimeMessage.getFlags().equals(Flag.SEEN)).hasAttachment(parser.hasAttachments()).fromer(parser.getFrom()).folder(folder != null ? folder.getName() : "手动导入").cc(getMimeMessageAddressJson(parser.getCc())).bcc(getMimeMessageAddressJson(parser.getBcc())).build();
+            return universalMail;
         } catch (Exception var8) {
             var8.printStackTrace();
             throw new MailPlusException(var8.getMessage());

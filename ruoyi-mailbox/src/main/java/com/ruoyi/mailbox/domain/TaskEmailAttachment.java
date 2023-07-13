@@ -18,9 +18,9 @@ public class TaskEmailAttachment extends BaseEntity
     /** 主键 */
     private Long id;
 
-    /** 任务ID */
-    @Excel(name = "任务ID")
-    private Long taskId;
+    /** 邮件ID */
+    @Excel(name = "邮件ID")
+    private Long headerId;
 
     /** 路径 */
     @Excel(name = "路径")
@@ -47,16 +47,16 @@ public class TaskEmailAttachment extends BaseEntity
     {
         return id;
     }
-    public void setTaskId(Long taskId) 
-    {
-        this.taskId = taskId;
+
+    public Long getHeaderId() {
+        return headerId;
     }
 
-    public Long getTaskId() 
-    {
-        return taskId;
+    public void setHeaderId(Long headerId) {
+        this.headerId = headerId;
     }
-    public void setPath(String path) 
+
+    public void setPath(String path)
     {
         this.path = path;
     }
@@ -97,7 +97,7 @@ public class TaskEmailAttachment extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
-            .append("taskId", getTaskId())
+            .append("headerId", getHeaderId())
             .append("path", getPath())
             .append("cid", getCid())
             .append("name", getName())

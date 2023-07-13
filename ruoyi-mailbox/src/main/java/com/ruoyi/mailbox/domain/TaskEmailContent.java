@@ -20,9 +20,9 @@ public class TaskEmailContent extends BaseEntity
     /** 主键 */
     private Long id;
 
-    /** 任务ID */
-    @Excel(name = "任务ID")
-    private Long taskId;
+    /** 邮件ID */
+    @Excel(name = "邮件ID")
+    private Long headerId;
 
     /** 信息内容 */
     @Excel(name = "信息内容")
@@ -55,12 +55,12 @@ public class TaskEmailContent extends BaseEntity
         return id;
     }
 
-    public Long getTaskId() {
-        return taskId;
+    public Long getHeaderId() {
+        return headerId;
     }
 
-    public void setTaskId(Long taskId) {
-        this.taskId = taskId;
+    public void setHeaderId(Long headerId) {
+        this.headerId = headerId;
     }
 
     public void setContent(String content)
@@ -113,7 +113,7 @@ public class TaskEmailContent extends BaseEntity
     public String toString() {
         return "TaskEmailContent{" +
                 "id=" + id +
-                ", taskId=" + taskId +
+                ", headerId=" + headerId +
                 ", content='" + content + '\'' +
                 ", modified=" + modified +
                 ", removed=" + removed +

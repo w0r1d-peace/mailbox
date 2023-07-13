@@ -10,31 +10,31 @@ import com.ruoyi.mailbox.service.ITaskEmailHeaderService;
 
 /**
  * 邮件头Service业务层处理
- * 
+ *
  * @author tangJM.
- * @date 2023-07-12
+ * @date 2023-07-13
  */
 @Service
-public class TaskEmailHeaderServiceImpl implements ITaskEmailHeaderService 
+public class TaskEmailHeaderServiceImpl implements ITaskEmailHeaderService
 {
     @Autowired
     private TaskEmailHeaderMapper taskEmailHeaderMapper;
 
     /**
      * 查询邮件头
-     * 
-     * @param emailId 邮件头主键
+     *
+     * @param id 邮件头主键
      * @return 邮件头
      */
     @Override
-    public TaskEmailHeader selectTaskEmailHeaderByEmailId(Long emailId)
+    public TaskEmailHeader selectTaskEmailHeaderById(Long id)
     {
-        return taskEmailHeaderMapper.selectTaskEmailHeaderByEmailId(emailId);
+        return taskEmailHeaderMapper.selectTaskEmailHeaderById(id);
     }
 
     /**
      * 查询邮件头列表
-     * 
+     *
      * @param taskEmailHeader 邮件头
      * @return 邮件头
      */
@@ -46,7 +46,7 @@ public class TaskEmailHeaderServiceImpl implements ITaskEmailHeaderService
 
     /**
      * 新增邮件头
-     * 
+     *
      * @param taskEmailHeader 邮件头
      * @return 结果
      */
@@ -59,7 +59,7 @@ public class TaskEmailHeaderServiceImpl implements ITaskEmailHeaderService
 
     /**
      * 修改邮件头
-     * 
+     *
      * @param taskEmailHeader 邮件头
      * @return 结果
      */
@@ -71,25 +71,25 @@ public class TaskEmailHeaderServiceImpl implements ITaskEmailHeaderService
 
     /**
      * 批量删除邮件头
-     * 
-     * @param emailIds 需要删除的邮件头主键
+     *
+     * @param ids 需要删除的邮件头主键
      * @return 结果
      */
     @Override
-    public int deleteTaskEmailHeaderByEmailIds(Long[] emailIds)
+    public int deleteTaskEmailHeaderByIds(Long[] ids)
     {
-        return taskEmailHeaderMapper.deleteTaskEmailHeaderByEmailIds(emailIds);
+        return taskEmailHeaderMapper.deleteTaskEmailHeaderByIds(ids);
     }
 
     /**
      * 删除邮件头信息
-     * 
-     * @param emailId 邮件头主键
+     *
+     * @param id 邮件头主键
      * @return 结果
      */
     @Override
-    public int deleteTaskEmailHeaderByEmailId(Long emailId)
+    public int deleteTaskEmailHeaderById(Long id)
     {
-        return taskEmailHeaderMapper.deleteTaskEmailHeaderByEmailId(emailId);
+        return taskEmailHeaderMapper.deleteTaskEmailHeaderById(id);
     }
 }

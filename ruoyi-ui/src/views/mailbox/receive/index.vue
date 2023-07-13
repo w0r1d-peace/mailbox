@@ -9,7 +9,7 @@
       </div>
 
       <el-menu default-active="inbox" class="email-menu">
-        <el-menu-item index="inbox" v-for="email in emails" :key="email.id">
+        <el-menu-item index="inbox" v-for="email in emails" :key="email.id" @click="handleEmailClick(email.id)">
           {{ email.name }}
         </el-menu-item>
       </el-menu>
@@ -20,8 +20,8 @@
       <div slot="header" class="mail-list-header">邮件列表</div>
       <el-scrollbar wrap-class="mail-list-scrollbar">
         <el-menu default-active="1" class="mail-menu" @select="handleMailClick">
-          <el-menu-item v-for="mail in mails" :key="mail.id" :index="mail.id">
-            {{ mail.subject }}
+          <el-menu-item v-for="mail in mails" :key="mail.id" :index="mail.id"  @click="handleMailClick(mail.id)">
+            {{ mail.title }}
           </el-menu-item>
         </el-menu>
       </el-scrollbar>
@@ -31,11 +31,11 @@
     <el-card class="mail-content-card" :style="{ width: '43%' }">
       <div slot="header" class="mail-content-header">邮件内容</div>
       <div class="mail-content">
-        <h3>{{ selectedMail.subject }}</h3>
-        <p>发件人：{{ selectedMail.sender }}</p>
-        <p>日期：{{ selectedMail.date }}</p>
+        <h3>{{ selectedMail.title }}</h3>
+        <p>发件人：{{ selectedMail.fromer }}</p>
+        <p>日期：{{ selectedMail.sendDate }}</p>
         <hr>
-        <p>{{ selectedMail.content }}</p>
+        <div v-html="selectedMail.content"></div>
       </div>
     </el-card>
 
@@ -78,17 +78,14 @@
 </template>
 
 <script>
-import {addTask, listTask, pullEmail} from "@/api/mailbox/receive";
+import {addTask, headerDetail, headerList, listTask, pullEmail} from "@/api/mailbox/task";
 import { getToken } from "@/utils/auth";
 
 export default {
   data() {
     return {
       emails: [],
-      mails: [
-      { id: 1, sender: 'John Doe', subject: 'Hello', date: '2023-07-10', content: 'This is the content of the email.' },
-      // 更多邮件...
-    ],
+      mails: [],
       selectedMail: {},
       dialogVisible: false,
       form: {
@@ -116,15 +113,21 @@ export default {
   },
   methods: {
     handleEmailClick(emailId) {
-      // Assuming you have an API function to fetch emails based on the email ID
-      // Replace `fetchEmails` with your actual API function
-      fetchEmails(emailId).then((response) => {
-        // Assuming the API response contains an array of email objects
-        this.mails = response.emails;
+      console.log("Clicked email ID:", emailId);
+      headerList(emailId).then((response) => {
+        this.mails = response.rows;
+        this.mails.forEach((mail) => {
+          mail.id = mail.id;
+          mail.title = mail.title;
+        });
       });
     },
     handleMailClick(mailId) {
-      this.selectedMail = this.mails.find((mail) => mail.id === mailId);
+      console.log("Clicked mail ID:", mailId);
+      headerDetail(mailId).then((response) => {
+        this.selectedMail = response.data;
+        selectedMail.subject = selectedMail.title;
+      });
     },
     showAddDialog() {
       this.dialogVisible = true;

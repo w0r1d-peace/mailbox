@@ -1,13 +1,16 @@
 package com.ruoyi.web.controller.mailbox;
 
 import java.util.List;
+
+import com.ruoyi.mailbox.domain.TaskEmailContent;
+import com.ruoyi.mailbox.domain.TaskEmailHeader;
+import com.ruoyi.mailbox.domain.dto.MailSendDTO;
+import com.ruoyi.mailbox.domain.vo.MailDetailVO;
+import com.ruoyi.mailbox.service.ITaskEmailContentService;
+import com.ruoyi.mailbox.service.ITaskEmailHeaderService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -15,6 +18,8 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.mailbox.domain.Task;
 import com.ruoyi.mailbox.service.ITaskService;
 import com.ruoyi.common.core.page.TableDataInfo;
+
+import javax.annotation.Resource;
 
 /**
  * 邮箱任务Controller
@@ -26,8 +31,14 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RequestMapping("/mailbox/task")
 public class TaskController extends BaseController
 {
-    @Autowired
+    @Resource
     private ITaskService taskService;
+
+    @Resource
+    private ITaskEmailHeaderService taskEmailHeaderService;
+
+    @Resource
+    private ITaskEmailContentService taskEmailContentService;
 
     /**
      * 查询邮箱任务列表
@@ -61,5 +72,60 @@ public class TaskController extends BaseController
     public AjaxResult pull(Long taskId)
     {
         return toAjax(taskService.pull(taskId));
+    }
+
+    /**
+     * 根据任务ID查询邮件列表
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('mailbox:mail:list')")
+    @GetMapping("/header/list")
+    public TableDataInfo headerList(Long taskId)
+    {
+        TaskEmailHeader taskEmailHeader = new TaskEmailHeader();
+        taskEmailHeader.setTaskId(taskId);
+        List<TaskEmailHeader> list = taskEmailHeaderService.selectTaskEmailHeaderList(taskEmailHeader);
+        if (list.isEmpty() && list.size() > 50) {
+            return getDataTable(list.subList(0, 50));
+        }
+
+        return getDataTable(list);
+    }
+
+    /**
+     * 根据邮件ID获取邮件详情
+     */
+    @PreAuthorize("@ss.hasPermi('mailbox:header:detail')")
+    @GetMapping("/header/detail/{headerId}")
+    public AjaxResult headerDetail(@PathVariable("headerId") Long headerId)
+    {
+        // 查询邮件头
+        TaskEmailHeader taskEmailHeader = taskEmailHeaderService.selectTaskEmailHeaderById(headerId);
+        // 查询邮件内容
+        MailDetailVO mailDetailVO = new MailDetailVO();
+        BeanUtils.copyProperties(taskEmailHeader, mailDetailVO);
+        
+        // 查询邮件内容
+        TaskEmailContent taskEmailContentParam = new TaskEmailContent();
+        taskEmailContentParam.setHeaderId(headerId);
+        List<TaskEmailContent> taskEmailContentList = taskEmailContentService.selectTaskEmailContentList(taskEmailContentParam);
+
+        if (taskEmailContentList != null && !taskEmailContentList.isEmpty()) {
+            TaskEmailContent taskEmailContent = taskEmailContentList.get(0);
+            mailDetailVO.setContent(taskEmailContent.getContent());
+        }
+
+        return AjaxResult.success(mailDetailVO);
+    }
+
+    /**
+     * 发送邮件
+     */
+    @PreAuthorize("@ss.hasPermi('mailbox:mail:send')")
+    @Log(title = "发送邮件", businessType = BusinessType.INSERT)
+    @PostMapping("/mail/send")
+    public AjaxResult send(@RequestBody MailSendDTO mailSendDTO)
+    {
+        return toAjax(taskService.send(mailSendDTO));
     }
 }

@@ -6,7 +6,7 @@
 
     <resultMap type="TaskEmailContent" id="TaskEmailContentResult">
         <result property="id"    column="id"    />
-        <result property="taskId"    column="task_id"    />
+        <result property="headerId"    column="header_id"    />
         <result property="content"    column="content"    />
         <result property="createTime"    column="create_time"    />
         <result property="modified"    column="modified"    />
@@ -16,13 +16,13 @@
     </resultMap>
 
     <sql id="selectTaskEmailContentVo">
-        select id, task_id, content, create_time, modified, removed, user_id, creator from mailbox_task_email_content
+        select id, header_id, content, create_time, modified, removed, user_id, creator from mailbox_task_email_content
     </sql>
 
     <select id="selectTaskEmailContentList" parameterType="TaskEmailContent" resultMap="TaskEmailContentResult">
         <include refid="selectTaskEmailContentVo"/>
         <where>
-            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="headerId != null "> and header_id = #{headerId}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="modified != null "> and modified = #{modified}</if>
             <if test="removed != null "> and removed = #{removed}</if>
@@ -39,7 +39,7 @@
     <insert id="insertTaskEmailContent" parameterType="TaskEmailContent" useGeneratedKeys="true" keyProperty="id">
         insert into mailbox_task_email_content
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="taskId != null">task_id,</if>
+            <if test="headerId != null">header_id,</if>
             <if test="content != null and content != ''">content,</if>
             <if test="createTime != null">create_time,</if>
             <if test="modified != null">modified,</if>
@@ -48,7 +48,7 @@
             <if test="creator != null">creator,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="taskId != null">#{taskId},</if>
+            <if test="headerId != null">#{headerId},</if>
             <if test="content != null and content != ''">#{content},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="modified != null">#{modified},</if>
@@ -61,7 +61,7 @@
     <update id="updateTaskEmailContent" parameterType="TaskEmailContent">
         update mailbox_task_email_content
         <trim prefix="SET" suffixOverrides=",">
-            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="headerId != null">header_id = #{headerId},</if>
             <if test="content != null and content != ''">content = #{content},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="modified != null">modified = #{modified},</if>

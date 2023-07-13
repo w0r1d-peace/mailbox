@@ -9,9 +9,9 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 邮件头对象 mailbox_task_email_header
- * 
+ *
  * @author tangJM.
- * @date 2023-07-12
+ * @date 2023-07-13
  */
 public class TaskEmailHeader extends BaseEntity
 {
@@ -32,8 +32,8 @@ public class TaskEmailHeader extends BaseEntity
     @Excel(name = "发件人")
     private String fromer;
 
-    /** 收件人JSON，按name=&gt;value,email=&gt;value的键值对形式存入 */
-    @Excel(name = "收件人JSON，按name=&gt;value,email=&gt;value的键值对形式存入")
+    /** 收件人JSON，按name=>value,email=>value的键值对形式存入 */
+    @Excel(name = "收件人JSON，按name=>value,email=>value的键值对形式存入")
     private String receiver;
 
     /** 密送人JSON，格式和收件人一样 */
@@ -94,173 +94,174 @@ public class TaskEmailHeader extends BaseEntity
     @Excel(name = "逻辑删除 1-是 0-否")
     private Integer removed;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
+    public Long getId()
+    {
+        return id;
+    }
     public void setTaskId(Long taskId)
     {
         this.taskId = taskId;
     }
 
-    public Long getTaskId() 
+    public Long getTaskId()
     {
         return taskId;
     }
-    public void setUid(String uid) 
+    public void setUid(String uid)
     {
         this.uid = uid;
     }
 
-    public String getUid() 
+    public String getUid()
     {
         return uid;
     }
-    public void setFromer(String fromer) 
+    public void setFromer(String fromer)
     {
         this.fromer = fromer;
     }
 
-    public String getFromer() 
+    public String getFromer()
     {
         return fromer;
     }
-    public void setReceiver(String receiver) 
+    public void setReceiver(String receiver)
     {
         this.receiver = receiver;
     }
 
-    public String getReceiver() 
+    public String getReceiver()
     {
         return receiver;
     }
-    public void setBcc(String bcc) 
+    public void setBcc(String bcc)
     {
         this.bcc = bcc;
     }
 
-    public String getBcc() 
+    public String getBcc()
     {
         return bcc;
     }
-    public void setCc(String cc) 
+    public void setCc(String cc)
     {
         this.cc = cc;
     }
 
-    public String getCc() 
+    public String getCc()
     {
         return cc;
     }
-    public void setFolder(String folder) 
+    public void setFolder(String folder)
     {
         this.folder = folder;
     }
 
-    public String getFolder() 
+    public String getFolder()
     {
         return folder;
     }
-    public void setHasRead(Integer hasRead) 
+    public void setHasRead(Integer hasRead)
     {
         this.hasRead = hasRead;
     }
 
-    public Integer getHasRead() 
+    public Integer getHasRead()
     {
         return hasRead;
     }
-    public void setHasAttachment(Integer hasAttachment) 
+    public void setHasAttachment(Integer hasAttachment)
     {
         this.hasAttachment = hasAttachment;
     }
 
-    public Integer getHasAttachment() 
+    public Integer getHasAttachment()
     {
         return hasAttachment;
     }
-    public void setSendDate(Date sendDate) 
+    public void setSendDate(Date sendDate)
     {
         this.sendDate = sendDate;
     }
 
-    public Date getSendDate() 
+    public Date getSendDate()
     {
         return sendDate;
     }
-    public void setEmail(String email) 
+    public void setEmail(String email)
     {
         this.email = email;
     }
 
-    public String getEmail() 
+    public String getEmail()
     {
         return email;
     }
-    public void setTitle(String title) 
+    public void setTitle(String title)
     {
         this.title = title;
     }
 
-    public String getTitle() 
+    public String getTitle()
     {
         return title;
     }
-    public void setEmlPath(String emlPath) 
+    public void setEmlPath(String emlPath)
     {
         this.emlPath = emlPath;
     }
 
-    public String getEmlPath() 
+    public String getEmlPath()
     {
         return emlPath;
     }
-    public void setHasTop(Integer hasTop) 
+    public void setHasTop(Integer hasTop)
     {
         this.hasTop = hasTop;
     }
 
-    public Integer getHasTop() 
+    public Integer getHasTop()
     {
         return hasTop;
     }
-    public void setModified(Date modified) 
+    public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
-    public Date getModified() 
+    public Date getModified()
     {
         return modified;
     }
-    public void setUserId(Long userId) 
+    public void setUserId(Long userId)
     {
         this.userId = userId;
     }
 
-    public Long getUserId() 
+    public Long getUserId()
     {
         return userId;
     }
-    public void setCreator(String creator) 
+    public void setCreator(String creator)
     {
         this.creator = creator;
     }
 
-    public String getCreator() 
+    public String getCreator()
     {
         return creator;
     }
-    public void setRemoved(Integer removed) 
+    public void setRemoved(Integer removed)
     {
         this.removed = removed;
     }
 
-    public Integer getRemoved() 
+    public Integer getRemoved()
     {
         return removed;
     }
@@ -268,26 +269,26 @@ public class TaskEmailHeader extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("taskId", getTaskId())
-            .append("uid", getUid())
-            .append("fromer", getFromer())
-            .append("receiver", getReceiver())
-            .append("bcc", getBcc())
-            .append("cc", getCc())
-            .append("folder", getFolder())
-            .append("hasRead", getHasRead())
-            .append("hasAttachment", getHasAttachment())
-            .append("sendDate", getSendDate())
-            .append("email", getEmail())
-            .append("title", getTitle())
-            .append("emlPath", getEmlPath())
-            .append("hasTop", getHasTop())
-            .append("createTime", getCreateTime())
-            .append("modified", getModified())
-            .append("userId", getUserId())
-            .append("creator", getCreator())
-            .append("removed", getRemoved())
-            .toString();
+                .append("id", getId())
+                .append("taskId", getTaskId())
+                .append("uid", getUid())
+                .append("fromer", getFromer())
+                .append("receiver", getReceiver())
+                .append("bcc", getBcc())
+                .append("cc", getCc())
+                .append("folder", getFolder())
+                .append("hasRead", getHasRead())
+                .append("hasAttachment", getHasAttachment())
+                .append("sendDate", getSendDate())
+                .append("email", getEmail())
+                .append("title", getTitle())
+                .append("emlPath", getEmlPath())
+                .append("hasTop", getHasTop())
+                .append("createTime", getCreateTime())
+                .append("modified", getModified())
+                .append("userId", getUserId())
+                .append("creator", getCreator())
+                .append("removed", getRemoved())
+                .toString();
     }
 }

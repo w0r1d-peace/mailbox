@@ -5,23 +5,23 @@ import com.ruoyi.mailbox.domain.TaskEmailHeader;
 
 /**
  * 邮件头Mapper接口
- * 
+ *
  * @author tangJM.
- * @date 2023-07-12
+ * @date 2023-07-13
  */
-public interface TaskEmailHeaderMapper 
+public interface TaskEmailHeaderMapper
 {
     /**
      * 查询邮件头
-     * 
-     * @param emailId 邮件头主键
+     *
+     * @param id 邮件头主键
      * @return 邮件头
      */
-    public TaskEmailHeader selectTaskEmailHeaderByEmailId(Long emailId);
+    public TaskEmailHeader selectTaskEmailHeaderById(Long id);
 
     /**
      * 查询邮件头列表
-     * 
+     *
      * @param taskEmailHeader 邮件头
      * @return 邮件头集合
      */
@@ -29,7 +29,7 @@ public interface TaskEmailHeaderMapper
 
     /**
      * 新增邮件头
-     * 
+     *
      * @param taskEmailHeader 邮件头
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface TaskEmailHeaderMapper
 
     /**
      * 修改邮件头
-     * 
+     *
      * @param taskEmailHeader 邮件头
      * @return 结果
      */
@@ -45,17 +45,17 @@ public interface TaskEmailHeaderMapper
 
     /**
      * 删除邮件头
-     * 
-     * @param emailId 邮件头主键
+     *
+     * @param id 邮件头主键
      * @return 结果
      */
-    public int deleteTaskEmailHeaderByEmailId(Long emailId);
+    public int deleteTaskEmailHeaderById(Long id);
 
     /**
      * 批量删除邮件头
-     * 
-     * @param emailIds 需要删除的数据主键集合
+     *
+     * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteTaskEmailHeaderByEmailIds(Long[] emailIds);
+    public int deleteTaskEmailHeaderByIds(Long[] ids);
 }

@@ -1,8 +1,8 @@
 package com.ruoyi.mailbox.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.mailbox.MailPlusException;
@@ -10,11 +10,13 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.mailbox.domain.TaskEmailAttachment;
 import com.ruoyi.mailbox.domain.TaskEmailContent;
 import com.ruoyi.mailbox.domain.TaskEmailHeader;
+import com.ruoyi.mailbox.domain.dto.MailSendDTO;
 import com.ruoyi.mailbox.mapper.TaskEmailAttachmentMapper;
 import com.ruoyi.mailbox.mapper.TaskEmailContentMapper;
 import com.ruoyi.mailbox.mapper.TaskEmailHeaderMapper;
 import com.ruoyi.mailbox.service.handler.server.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,9 @@ import com.ruoyi.mailbox.domain.Task;
 import com.ruoyi.mailbox.service.ITaskService;
 
 import javax.annotation.Resource;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 /**
  * 邮箱任务Service业务层处理
@@ -80,7 +85,7 @@ public class TaskServiceImpl implements ITaskService
      * @return 结果
      */
     @Override
-    public int insertTask(Task task)
+    public boolean insertTask(Task task)
     {
         // 是否存在邮箱
         boolean exist = existEmail(task.getEmail());
@@ -95,7 +100,17 @@ public class TaskServiceImpl implements ITaskService
         }
 
         task.setCreateTime(DateUtils.getNowDate());
-        return taskMapper.insertTask(task);
+        taskMapper.insertTask(task);
+
+        // 拉取邮件
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                pullEmail(task);
+            }
+        }).start();
+
+        return true;
     }
 
 
@@ -112,7 +127,7 @@ public class TaskServiceImpl implements ITaskService
     }
 
     private IMailService getMailService(String host) {
-        if (host.contains("pop")) {
+        if (host.contains("pop") || host.equals("mail.sohu.com")) {
             return new Pop3Service();
         } else if (host.contains("imap")) {
             return new ImapService();
@@ -196,6 +211,61 @@ public class TaskServiceImpl implements ITaskService
         return true;
     }
 
+    @Override
+    public boolean send(MailSendDTO mailSendDTO) {
+        // 获取任务信息
+        Task task = taskMapper.selectTaskById(mailSendDTO.getTaskId());
+        if (task == null) {
+            throw new ServiceException("邮箱任务不存在");
+        }
+
+        String email = task.getEmail();
+        String password = task.getPassword();
+
+        sendMail(email, password, mailSendDTO.getReceiver(), mailSendDTO.getTitle(), mailSendDTO.getContent());
+        return true;
+    }
+
+    /**
+     * 发送邮件
+     * @param senderEmail
+     * @param senderPassword
+     * @param recipientEmail
+     * @param subject
+     * @param content
+     */
+    private void sendMail(String senderEmail, String senderPassword, String recipientEmail, String subject, String content) {
+        // 设置邮件属性
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.host", "smtp.tom.com"); // 设置SMTP服务器地址
+        properties.put("mail.smtp.port", "25"); // 设置SMTP服务器端口号
+
+        // 创建会话对象
+        Session session = Session.getInstance(properties, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        try {
+            // 创建邮件消息对象
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(senderEmail));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+            message.setSubject(subject); // 设置邮件主题
+            message.setText(content); // 设置邮件内容
+
+            // 发送邮件
+            Transport.send(message);
+
+            System.out.println("Email sent successfully!");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 拉去邮件
      * @param task
@@ -232,7 +302,7 @@ public class TaskServiceImpl implements ITaskService
 
                 // 邮件内容
                 TaskEmailContent emailContent = new TaskEmailContent();
-                emailContent.setTaskId(id);
+                emailContent.setHeaderId(emailHeader.getId());
                 emailContent.setContent(universalMail.getContent());
                 emailContent.setCreateTime(DateUtils.getNowDate());
                 taskEmailContentMapper.insertTaskEmailContent(emailContent);
@@ -244,7 +314,7 @@ public class TaskServiceImpl implements ITaskService
                     for (UniversalAttachment attachment : attachments) {
                         TaskEmailAttachment emailAttachment = new TaskEmailAttachment();
                         BeanUtils.copyProperties(attachment, emailAttachment);
-                        emailAttachment.setTaskId(id);
+                        emailAttachment.setHeaderId(emailHeader.getId());
                         emailAttachment.setCreateTime(DateUtils.getNowDate());
                         emailAttachments.add(emailAttachment);
                     }
